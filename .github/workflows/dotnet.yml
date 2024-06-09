@@ -24,6 +24,8 @@ jobs:
       run: dotnet restore
     - name: Snyk
       uses: snyk/actions@0.4.0
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     - name: Build
       run: dotnet build --no-restore
     - name: Test
