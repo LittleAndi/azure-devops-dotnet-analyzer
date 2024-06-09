@@ -23,10 +23,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Run Snyk to check for vulnerabilities
       uses: snyk/actions/dotnet@master
-      with:
-        args:
-          --all-projects
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --all-projects
     - name: Test
       run: dotnet test --no-build --verbosity normal
