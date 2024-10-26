@@ -4,7 +4,9 @@ await Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
     {
         // Infrastructure
+        services.AddMemoryCache();
         services.AddTransient<ApiVersionHandler>();
+        services.AddTransient<CachedDevOpsHandler>();
         services.AddSingleton<IAzureDevOpsClient, AzureDevOpsClient>();
         services.AddHttpClient("jsonclient", client =>
         {
@@ -14,7 +16,10 @@ await Host.CreateDefaultBuilder(args)
                 "Basic",
                 Convert.ToBase64String(Encoding.ASCII.GetBytes(hostContext.Configuration["AzureDevOps:Username"] + ":" + hostContext.Configuration["AzureDevOps:PersonalAccessToken"]))
             );
-        }).AddHttpMessageHandler<ApiVersionHandler>();
+        })
+        .AddHttpMessageHandler<ApiVersionHandler>()
+        .AddHttpMessageHandler<CachedDevOpsHandler>();
+
         services.AddHttpClient("downloadclient", client =>
         {
             client.BaseAddress = new Uri("https://dev.azure.com/");
